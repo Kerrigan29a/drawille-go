@@ -107,3 +107,41 @@ func TestDrawLineDiagonalNonSquare(t *testing.T) {
 	assert.True(t, c.Get(1, 2))
 	assert.True(t, c.Get(2, 3))
 }
+
+func TestGetDot(t *testing.T) {
+	assert.Equal(t, getDot(0, 0, false), 0x1)
+	assert.Equal(t, getDot(1, 0, false), 0x2)
+	assert.Equal(t, getDot(2, 0, false), 0x4)
+	assert.Equal(t, getDot(3, 0, false), 0x40)
+	assert.Equal(t, getDot(0, 1, false), 0x8)
+	assert.Equal(t, getDot(1, 1, false), 0x10)
+	assert.Equal(t, getDot(2, 1, false), 0x20)
+	assert.Equal(t, getDot(3, 1, false), 0x80)
+
+	assert.Equal(t, getDot(4, 2, false), 0x1)
+	assert.Equal(t, getDot(5, 2, false), 0x2)
+	assert.Equal(t, getDot(6, 2, false), 0x4)
+	assert.Equal(t, getDot(7, 2, false), 0x40)
+	assert.Equal(t, getDot(4, 3, false), 0x8)
+	assert.Equal(t, getDot(5, 3, false), 0x10)
+	assert.Equal(t, getDot(6, 3, false), 0x20)
+	assert.Equal(t, getDot(7, 3, false), 0x80)
+
+	assert.Equal(t, getDot(0, 0, true), 0x40)
+	assert.Equal(t, getDot(1, 0, true), 0x4)
+	assert.Equal(t, getDot(2, 0, true), 0x2)
+	assert.Equal(t, getDot(3, 0, true), 0x1)
+	assert.Equal(t, getDot(0, 1, true), 0x80)
+	assert.Equal(t, getDot(1, 1, true), 0x20)
+	assert.Equal(t, getDot(2, 1, true), 0x10)
+	assert.Equal(t, getDot(3, 1, true), 0x8)
+
+	assert.Equal(t, getDot(4, 2, true), 0x40)
+	assert.Equal(t, getDot(5, 2, true), 0x4)
+	assert.Equal(t, getDot(6, 2, true), 0x2)
+	assert.Equal(t, getDot(7, 2, true), 0x1)
+	assert.Equal(t, getDot(4, 3, true), 0x80)
+	assert.Equal(t, getDot(5, 3, true), 0x20)
+	assert.Equal(t, getDot(6, 3, true), 0x10)
+	assert.Equal(t, getDot(7, 3, true), 0x8)
+}
