@@ -1,7 +1,7 @@
 package main
 
 import (
-  "github.com/exrook/drawille-go"
+  "github.com/Kerrigan29a/drawille-go"
   "math"
   "fmt"
 )

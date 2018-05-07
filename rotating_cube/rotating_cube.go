@@ -4,7 +4,7 @@ package main
 // GPL3
 
 import (
-	. "github.com/exrook/drawille-go"
+	. "github.com/Kerrigan29a/drawille-go"
 	tg "github.com/nsf/termbox-go"
 	"math"
 	"os"
