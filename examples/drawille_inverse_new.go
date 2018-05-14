@@ -16,20 +16,87 @@ C:\Users\VirtualUser\go\src\github.com\Kerrigan29a\drawille-go (master -> origin
 ⠀⠀⢉⣽⣿⣿
 ⢉⣽⣿⣿⣿⣿
 */
+
+const N int = 12
+
 func main() {
+
+	fmt.Println("x>=0 && y>=0 && !inverse")
 	g := drawille.NewCanvas()
-	for i := 0; i < 12; i++ {
-		for j := 0; j <= i; j++ {
-			g.Set(i, j)
+	g.Inverse = false
+	for x := 0; x < N; x++ {
+		for y := 0; y < N-x; y++ {
+			g.Set(x, y)
 		}
 	}
 	fmt.Print(g.String())
 
+	fmt.Println("x>=0 && y>=0 && inverse")
 	g.Clear()
 	g.Inverse = true
-	for i := 0; i < 12; i++ {
-		for j := 0; j <= i; j++ {
-			g.Set(i, j)
+	for x := 0; x < N; x++ {
+		for y := 0; y < N-x; y++ {
+			g.Set(x, y)
+		}
+	}
+	fmt.Print(g.String())
+
+	fmt.Println("x<0 && y>=0 && !inverse")
+	g.Clear()
+	g.Inverse = false
+	for x := -N; x < 0; x++ {
+		for y := 0; y <= N+x; y++ {
+			g.Set(x, y)
+		}
+	}
+	fmt.Print(g.String())
+
+	fmt.Println("x<0 && y>=0 && inverse")
+	g.Clear()
+	g.Inverse = true
+	for x := -N; x < 0; x++ {
+		for y := 0; y <= N+x; y++ {
+			g.Set(x, y)
+		}
+	}
+	fmt.Print(g.String())
+
+	fmt.Println("x>=0 && y<0 && !inverse")
+	g.Clear()
+	g.Inverse = false
+	for x := 0; x < N; x++ {
+		for y := -N + x; y < 0; y++ {
+			g.Set(x, y)
+		}
+	}
+	fmt.Print(g.String())
+
+	fmt.Println("x>=0 && y<0 && inverse")
+	g.Clear()
+	g.Inverse = true
+	for x := 0; x < N; x++ {
+		for y := -N + x; y < 0; y++ {
+			g.Set(x, y)
+		}
+	}
+	fmt.Print(g.String())
+
+	fmt.Println("x<0 && y<0 && !inverse")
+	g.Clear()
+	g.Inverse = false
+	for x := -N; x < 0; x++ {
+		for y := -N - x - 1; y < 0; y++ {
+			g.Set(x, y)
+		}
+	}
+	fmt.Print(g.String())
+
+	fmt.Println("x<0 && y<0 && inverse")
+	g.Clear()
+	g.Inverse = true
+	for x := -N; x < 0; x++ {
+		for y := -N - x - 1; y < 0; y++ {
+			g.Set(x, y)
 		}
 	}
 	fmt.Print(g.String())

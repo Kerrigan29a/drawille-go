@@ -8,9 +8,22 @@ import (
 // Braille chars start at 0x2800
 var brailleStartOrdinal = 0x2800
 
+func internalPosition(n, base int) int {
+	if n >= 0 {
+		return n % base
+	}
+	result := n % base
+	if result == 0 {
+		return -base
+	}
+	return result
+}
+
 func getDot(y, x int, inverse bool) int {
-	y = y % 4
-	x = x % 2
+	y = internalPosition(y, 4)
+	x = internalPosition(x, 2)
+
+	/* x>=0 && y>=0 && !inverse */
 	if y == 0 && x == 0 && !inverse {
 		return 0x1
 	}
@@ -35,6 +48,8 @@ func getDot(y, x int, inverse bool) int {
 	if y == 3 && x == 1 && !inverse {
 		return 0x80
 	}
+
+	/* x>=0 && y>=0 && inverse */
 	if y == 0 && x == 0 && inverse {
 		return 0x40
 	}
@@ -59,7 +74,175 @@ func getDot(y, x int, inverse bool) int {
 	if y == 3 && x == 1 && inverse {
 		return 0x8
 	}
+
+	/* x<0 && y<0 && !inverse */
+	if y == -1 && x == -1 && !inverse {
+		return 0x80
+	}
+	if y == -2 && x == -1 && !inverse {
+		return 0x20
+	}
+	if y == -3 && x == -1 && !inverse {
+		return 0x10
+	}
+	if y == -4 && x == -1 && !inverse {
+		return 0x8
+	}
+	if y == -1 && x == -2 && !inverse {
+		return 0x40
+	}
+	if y == -2 && x == -2 && !inverse {
+		return 0x4
+	}
+	if y == -3 && x == -2 && !inverse {
+		return 0x2
+	}
+	if y == -4 && x == -2 && !inverse {
+		return 0x1
+	}
+
+	/* x<0 && y<0 && inverse */
+	if y == -1 && x == -1 && inverse {
+		return 0x8
+	}
+	if y == -2 && x == -1 && inverse {
+		return 0x10
+	}
+	if y == -3 && x == -1 && inverse {
+		return 0x20
+	}
+	if y == -4 && x == -1 && inverse {
+		return 0x80
+	}
+	if y == -1 && x == -2 && inverse {
+		return 0x1
+	}
+	if y == -2 && x == -2 && inverse {
+		return 0x2
+	}
+	if y == -3 && x == -2 && inverse {
+		return 0x4
+	}
+	if y == -4 && x == -2 && inverse {
+		return 0x40
+	}
+
+	/* x>=0 && y<0 && !inverse */
+	if y == -1 && x == 0 && !inverse {
+		return 0x40
+	}
+	if y == -2 && x == 0 && !inverse {
+		return 0x4
+	}
+	if y == -3 && x == 0 && !inverse {
+		return 0x2
+	}
+	if y == -4 && x == 0 && !inverse {
+		return 0x1
+	}
+	if y == -1 && x == 1 && !inverse {
+		return 0x80
+	}
+	if y == -2 && x == 1 && !inverse {
+		return 0x20
+	}
+	if y == -3 && x == 1 && !inverse {
+		return 0x10
+	}
+	if y == -4 && x == 1 && !inverse {
+		return 0x8
+	}
+
+	/* x>=0 && y<0 && inverse */
+	if y == -1 && x == 0 && inverse {
+		return 0x1
+	}
+	if y == -2 && x == 0 && inverse {
+		return 0x2
+	}
+	if y == -3 && x == 0 && inverse {
+		return 0x4
+	}
+	if y == -4 && x == 0 && inverse {
+		return 0x40
+	}
+	if y == -1 && x == 1 && inverse {
+		return 0x8
+	}
+	if y == -2 && x == 1 && inverse {
+		return 0x10
+	}
+	if y == -3 && x == 1 && inverse {
+		return 0x20
+	}
+	if y == -4 && x == 1 && inverse {
+		return 0x80
+	}
+
+	/* x<0 && y>=0 && !inverse */
+	if y == 0 && x == -1 && !inverse {
+		return 0x8
+	}
+	if y == 1 && x == -1 && !inverse {
+		return 0x10
+	}
+	if y == 2 && x == -1 && !inverse {
+		return 0x20
+	}
+	if y == 3 && x == -1 && !inverse {
+		return 0x80
+	}
+	if y == 0 && x == -2 && !inverse {
+		return 0x1
+	}
+	if y == 1 && x == -2 && !inverse {
+		return 0x2
+	}
+	if y == 2 && x == -2 && !inverse {
+		return 0x4
+	}
+	if y == 3 && x == -2 && !inverse {
+		return 0x40
+	}
+
+	/* x<0 && y>=0 && inverse */
+	if y == 0 && x == -1 && inverse {
+		return 0x80
+	}
+	if y == 1 && x == -1 && inverse {
+		return 0x20
+	}
+	if y == 2 && x == -1 && inverse {
+		return 0x10
+	}
+	if y == 3 && x == -1 && inverse {
+		return 0x8
+	}
+	if y == 0 && x == -2 && inverse {
+		return 0x40
+	}
+	if y == 1 && x == -2 && inverse {
+		return 0x4
+	}
+	if y == 2 && x == -2 && inverse {
+		return 0x2
+	}
+	if y == 3 && x == -2 && inverse {
+		return 0x1
+	}
+
 	panic(fmt.Sprintf("Unknown values: y=%d x=%d inverse=%t", y, x, inverse))
+}
+
+func externalPosition(n, base int) int {
+	return int(math.Floor(float64(n) / float64(base)))
+}
+
+// Convert x,y to cols, rows
+func getPos(x, y int) (int, int) {
+	c := externalPosition(x, 2)
+	r := externalPosition(y, 4)
+	return c, r
 }
 
 type Canvas struct {
@@ -124,14 +307,9 @@ func (c *Canvas) Clear() {
 	c.chars = make(map[int]map[int]int)
 }
 
-// Convert x,y to cols, rows
-func (c Canvas) getPos(x, y int) (int, int) {
-	return (x / 2), (y / 4)
-}
-
 // Set a pixel of c
 func (c *Canvas) Set(x, y int) {
-	col, row := c.getPos(x, y)
+	col, row := getPos(x, y)
 	if m := c.chars[row]; m == nil {
 		c.chars[row] = make(map[int]int)
 	}
@@ -142,7 +320,7 @@ func (c *Canvas) Set(x, y int) {
 
 // Unset a pixel of c
 func (c *Canvas) UnSet(x, y int) {
-	col, row := c.getPos(x, y)
+	col, row := getPos(x, y)
 	if m := c.chars[row]; m == nil {
 		c.chars[row] = make(map[int]int)
 	}
@@ -151,7 +329,7 @@ func (c *Canvas) UnSet(x, y int) {
 
 // Toggle a point
 func (c *Canvas) Toggle(x, y int) {
-	col, row := c.getPos(x, y)
+	col, row := getPos(x, y)
 	if m := c.chars[row]; m == nil {
 		c.chars[row] = make(map[int]int)
 	}
@@ -160,7 +338,7 @@ func (c *Canvas) Toggle(x, y int) {
 
 // Set text to the given coordinates
 func (c *Canvas) SetText(x, y int, text string) {
-	col, row := c.getPos(x, y)
+	col, row := getPos(x, y)
 	if m := c.chars[row]; m == nil {
 		c.chars[row] = make(map[int]int)
 	}
@@ -172,7 +350,7 @@ func (c *Canvas) SetText(x, y int, text string) {
 // Get pixel at the given coordinates
 func (c Canvas) Get(x, y int) bool {
 	dot := getDot(y, x, c.Inverse)
-	col, row := c.getPos(x, y)
+	col, row := getPos(x, y)
 	char := c.chars[row][col]
 	return (char & dot) != 0
 }
