@@ -511,7 +511,7 @@ func (c *Canvas) DrawCircle(x, y, r int) {
 const b2Seg = 20
 
 /*
-DrawBézier2 draws a quadratic bezier curve.
+DrawBézier2 draws a quadratic Bézier curve.
 
 From: https://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic#Go
 */
@@ -538,7 +538,7 @@ func (c *Canvas) DrawBézier2(x1, y1, x2, y2, x3, y3 int) {
 const b3Seg = 30
 
 /*
-DrawBézier3 draws a cubic bezier curve.
+DrawBézier3 draws a cubic Bézier curve.
 
 From: https://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Cubic#Go
 */

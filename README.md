@@ -1,7 +1,14 @@
 GO-DRAWILLE
 ===========
 Drawing in the terminal with Unicode Braille characters.
-A [go](https://golang.org) port of [asciimoo's](https://github.com/asciimoo) [drawille](https://github.com/asciimoo/drawille)
+A [go](https://golang.org) port of [asciimoo's](https://github.com/asciimoo) [drawille](https://github.com/asciimoo/drawille).
+This version is a fork from [exrook's]https://github.com/exrook/drawille-go version which adds:
+
+* Inverse coordinates mode, which is very useful to plot bars graphs, hystograms, ...
+* Bresenham's line algorithm
+* Bresenham's circle algorithm
+* Quadratic Bézier curve
+* Cubic Bézier curve
 
 ### LICENSE
 
@@ -21,4 +28,5 @@ along with drawille-go. If not, see < http://www.gnu.org/licenses/ >.
 
 (C) 2014 by Adam Tauber, <asciimoo@gmail.com>
 (C) 2014 by Jacob Hughes, <exrook.j@gmail.com>
+(C) 2018-2019 by Javier Escalada Gómez <kerrigan29a.j@gmail.com>
 ```
