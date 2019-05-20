@@ -406,46 +406,180 @@ func (c Canvas) String() string {
 	return c.Frame(c.MinX(), c.MinY(), c.MaxX(), c.MaxY())
 }
 
-func (c *Canvas) DrawLine(x1, y1, x2, y2 float64) {
-	xdiff := math.Abs(x1 - x2)
-	ydiff := math.Abs(y2 - y1)
+/*
+Fill implements the Flood fill algorithm.
 
-	var xdir, ydir float64
-	if x1 <= x2 {
-		xdir = 1
-	} else {
-		xdir = -1
-	}
-	if y1 <= y2 {
-		ydir = 1
-	} else {
-		ydir = -1
-	}
-
-	r := math.Max(xdiff, ydiff)
-
-	for i := 0; i < round(r)+1; i = i + 1 {
-		x, y := x1, y1
-		if ydiff != 0 {
-			y += (float64(i) * ydiff) / (r * ydir)
+From: https://rosettacode.org/wiki/Bitmap/Flood_fill#Go
+*/
+func (c *Canvas) Fill(x, y int) {
+	target := c.Get(x, y)
+	var ff func(x, y int)
+	ff = func(x, y int) {
+		current := c.Get(x, y)
+		if current == target {
+			c.Set(x, y)
+			ff(x-1, y)
+			ff(x+1, y)
+			ff(x, y-1)
+			ff(x, y+1)
 		}
-		if xdiff != 0 {
-			x += (float64(i) * xdiff) / (r * xdir)
+	}
+	ff(x, y)
+}
+
+/*
+DrawLine plots a line using the Bresenham's algorithm
+
+From: https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Go
+*/
+func (c *Canvas) DrawLine(x0, y0, x1, y1 int) {
+	/* Implemented straight from WP pseudocode */
+	dx := x1 - x0
+	if dx < 0 {
+		dx = -dx
+	}
+	dy := y1 - y0
+	if dy < 0 {
+		dy = -dy
+	}
+	var sx, sy int
+	if x0 < x1 {
+		sx = 1
+	} else {
+		sx = -1
+	}
+	if y0 < y1 {
+		sy = 1
+	} else {
+		sy = -1
+	}
+	err := dx - dy
+
+	for {
+		c.Set(x0, y0)
+		if x0 == x1 && y0 == y1 {
+			break
 		}
-		c.Toggle(round(x), round(y))
+		e2 := 2 * err
+		if e2 > -dy {
+			err -= dy
+			x0 += sx
+		}
+		if e2 < dx {
+			err += dx
+			y0 += sy
+		}
 	}
 }
 
-func (c *Canvas) DrawPolygon(center_x, center_y, sides, radius float64) {
-	degree := 360 / sides
-	for n := 0; n < int(sides); n = n + 1 {
-		a := float64(n) * degree
-		b := float64(n+1) * degree
+/*
+DrawCircle plots a circle with center x, y and radius r using the Bresenham's algorithm.
 
-		x1 := (center_x + (math.Cos(radians(a)) * (radius/2 + 1)))
-		y1 := (center_y + (math.Sin(radians(a)) * (radius/2 + 1)))
-		x2 := (center_x + (math.Cos(radians(b)) * (radius/2 + 1)))
-		y2 := (center_y + (math.Sin(radians(b)) * (radius/2 + 1)))
+Limiting behavior:
+r < 0 plots no pixels.
+r = 0 plots a single pixel at x, y.
+r = 1 plots four pixels in a diamond shape around the center pixel at x, y.
+
+From: https://rosettacode.org/wiki/Bitmap/Midpoint_circle_algorithm#Go
+*/
+func (c *Canvas) DrawCircle(x, y, r int) {
+	if r < 0 {
+		return
+	}
+	/* Bresenham algorithm */
+	x1, y1, err := -r, 0, 2-2*r
+	for {
+		c.Set(x-x1, y+y1)
+		c.Set(x-y1, y-x1)
+		c.Set(x+x1, y-y1)
+		c.Set(x+y1, y+x1)
+		r = err
+		if r > x1 {
+			x1++
+			err += x1*2 + 1
+		}
+		if r <= y1 {
+			y1++
+			err += y1*2 + 1
+		}
+		if x1 >= 0 {
+			break
+		}
+	}
+}
+
+const b2Seg = 20
+
+/*
+DrawBézier2 draws a quadratic bezier curve.
+
+From: https://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic#Go
+*/
+func (c *Canvas) DrawBézier2(x1, y1, x2, y2, x3, y3 int) {
+	var px, py [b2Seg + 1]int
+	fx1, fy1 := float64(x1), float64(y1)
+	fx2, fy2 := float64(x2), float64(y2)
+	fx3, fy3 := float64(x3), float64(y3)
+	for i := range px {
+		c := float64(i) / b2Seg
+		a := 1 - c
+		a, b, c := a*a, 2*c*a, c*c
+		px[i] = int(a*fx1 + b*fx2 + c*fx3)
+		py[i] = int(a*fy1 + b*fy2 + c*fy3)
+	}
+	x0, y0 := px[0], py[0]
+	for i := 1; i <= b2Seg; i++ {
+		x1, y1 := px[i], py[i]
+		c.DrawLine(x0, y0, x1, y1)
+		x0, y0 = x1, y1
+	}
+}
+
+const b3Seg = 30
+
+/*
+DrawBézier3 draws a cubic bezier curve.
+
+From: https://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Cubic#Go
+*/
+func (c *Canvas) DrawBézier3(x1, y1, x2, y2, x3, y3, x4, y4 int) {
+	var px, py [b3Seg + 1]int
+	fx1, fy1 := float64(x1), float64(y1)
+	fx2, fy2 := float64(x2), float64(y2)
+	fx3, fy3 := float64(x3), float64(y3)
+	fx4, fy4 := float64(x4), float64(y4)
+	for i := range px {
+		d := float64(i) / b3Seg
+		a := 1 - d
+		b, c := a*a, d*d
+		a, b, c, d = a*b, 3*b*d, 3*a*c, c*d
+		px[i] = int(a*fx1 + b*fx2 + c*fx3 + d*fx4)
+		py[i] = int(a*fy1 + b*fy2 + c*fy3 + d*fy4)
+	}
+	x0, y0 := px[0], py[0]
+	for i := 1; i <= b3Seg; i++ {
+		x1, y1 := px[i], py[i]
+		c.DrawLine(x0, y0, x1, y1)
+		x0, y0 = x1, y1
+	}
+}
+
+/*
+DrawPolygon plots a polygon of N sides.
+*/
+func (c *Canvas) DrawPolygon(center_x, center_y, sides, radius int) {
+	degree := 360 / float64(sides)
+	x0 := float64(center_x)
+	y0 := float64(center_y)
+	r := float64(radius)/2 + 1
+	for n := 0; n < sides; n++ {
+		a := radians(float64(n) * degree)
+		b := radians(float64(n+1) * degree)
+
+		x1 := round((x0 + (math.Cos(a) * r)))
+		y1 := round((y0 + (math.Sin(a) * r)))
+		x2 := round((x0 + (math.Cos(b) * r)))
+		y2 := round((y0 + (math.Sin(b) * r)))
 
 		c.DrawLine(x1, y1, x2, y2)
 	}
