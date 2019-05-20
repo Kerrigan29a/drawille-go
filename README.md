@@ -2,7 +2,7 @@ GO-DRAWILLE
 ===========
 Drawing in the terminal with Unicode Braille characters.
 A [go](https://golang.org) port of [asciimoo's](https://github.com/asciimoo) [drawille](https://github.com/asciimoo/drawille).
-This version is a fork from [exrook's]https://github.com/exrook/drawille-go version which adds:
+This version is a fork from [exrook's](https://github.com/exrook/drawille-go) version which adds:
 
 * Inverse coordinates mode, which is very useful to plot bars graphs, hystograms, ...
 * Bresenham's line algorithm
