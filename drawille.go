@@ -413,18 +413,32 @@ From: https://rosettacode.org/wiki/Bitmap/Flood_fill#Go
 */
 func (c *Canvas) Fill(x, y int) {
 	target := c.Get(x, y)
-	var ff func(x, y int)
-	ff = func(x, y int) {
-		current := c.Get(x, y)
+	tasks := [][2]int{[2]int{x, y}}
+	for {
+		if len(tasks) == 0 {
+			break
+		}
+		var task [2]int
+		task, tasks = tasks[0], tasks[1:]
+		tx := task[0]
+		ty := task[1]
+		current := c.Get(tx, ty)
 		if current == target {
-			c.Set(x, y)
-			ff(x-1, y)
-			ff(x+1, y)
-			ff(x, y-1)
-			ff(x, y+1)
+			c.Set(tx, ty)
+			if c.Get(tx, ty) {
+				tasks = append(tasks, [2]int{tx - 1, ty})
+			}
+			if c.Get(tx, ty) {
+				tasks = append(tasks, [2]int{tx + 1, ty})
+			}
+			if c.Get(tx, ty) {
+				tasks = append(tasks, [2]int{tx, ty - 1})
+			}
+			if c.Get(tx, ty) {
+				tasks = append(tasks, [2]int{tx, ty + 1})
+			}
 		}
 	}
-	ff(x, y)
 }
 
 /*
