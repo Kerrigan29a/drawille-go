@@ -124,10 +124,10 @@ func run(projection bool) {
 			}
 
 			for _, f := range faces {
-				c.DrawLine(t[f[0]].x, t[f[0]].y, t[f[1]].x, t[f[1]].y)
-				c.DrawLine(t[f[1]].x, t[f[1]].y, t[f[2]].x, t[f[2]].y)
-				c.DrawLine(t[f[2]].x, t[f[2]].y, t[f[3]].x, t[f[3]].y)
-				c.DrawLine(t[f[3]].x, t[f[3]].y, t[f[0]].x, t[f[0]].y)
+				c.DrawLine(int(t[f[0]].x), int(t[f[0]].y), int(t[f[1]].x), int(t[f[1]].y))
+				c.DrawLine(int(t[f[1]].x), int(t[f[1]].y), int(t[f[2]].x), int(t[f[2]].y))
+				c.DrawLine(int(t[f[2]].x), int(t[f[2]].y), int(t[f[3]].x), int(t[f[3]].y))
+				c.DrawLine(int(t[f[3]].x), int(t[f[3]].y), int(t[f[0]].x), int(t[f[0]].y))
 			}
 
 			f := c.Frame(-40, -40, 80, 80)
