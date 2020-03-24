@@ -54,12 +54,12 @@ func main() {
 
 	fmt.Println("A Bézier quadratic curve")
 	g.Clear()
-	g.DrawBézier2(10, 75, 250, -50, 150, 140)
+	g.DrawBezier2(10, 75, 250, -50, 150, 140)
 	fmt.Println(g.String())
 
 	fmt.Println("A Bézier cubic curve")
 	g.Clear()
-	g.DrawBézier3(10, 100, 350, 25, -150, 25, 190, 75)
+	g.DrawBezier3(10, 100, 350, 25, -150, 25, 190, 75)
 	fmt.Println(g.String())
 
 }

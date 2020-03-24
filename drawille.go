@@ -525,11 +525,11 @@ func (c *Canvas) DrawCircle(x, y, r int) {
 const b2Seg = 20
 
 /*
-DrawBézier2 draws a quadratic Bézier curve.
+DrawBezier2 draws a quadratic Bézier curve.
 
 From: https://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic#Go
 */
-func (c *Canvas) DrawBézier2(x1, y1, x2, y2, x3, y3 int) {
+func (c *Canvas) DrawBezier2(x1, y1, x2, y2, x3, y3 int) {
 	var px, py [b2Seg + 1]int
 	fx1, fy1 := float64(x1), float64(y1)
 	fx2, fy2 := float64(x2), float64(y2)
@@ -552,11 +552,11 @@ func (c *Canvas) DrawBézier2(x1, y1, x2, y2, x3, y3 int) {
 const b3Seg = 30
 
 /*
-DrawBézier3 draws a cubic Bézier curve.
+DrawBezier3 draws a cubic Bézier curve.
 
 From: https://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Cubic#Go
 */
-func (c *Canvas) DrawBézier3(x1, y1, x2, y2, x3, y3, x4, y4 int) {
+func (c *Canvas) DrawBezier3(x1, y1, x2, y2, x3, y3, x4, y4 int) {
 	var px, py [b3Seg + 1]int
 	fx1, fy1 := float64(x1), float64(y1)
 	fx2, fy2 := float64(x2), float64(y2)
