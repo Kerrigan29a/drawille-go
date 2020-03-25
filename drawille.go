@@ -579,24 +579,37 @@ func (c *Canvas) DrawBezier3(x1, y1, x2, y2, x3, y3, x4, y4 int) {
 }
 
 /*
-DrawPolygon plots a polygon of N sides.
+DrawPolygon plots a polygon of N sides inside the circumscribed circle of radius R.
 */
-func (c *Canvas) DrawPolygon(center_x, center_y, sides, radius int) {
-	degree := 360 / float64(sides)
-	x0 := float64(center_x)
-	y0 := float64(center_y)
-	r := float64(radius)/2 + 1
-	for n := 0; n < sides; n++ {
-		a := radians(float64(n) * degree)
-		b := radians(float64(n+1) * degree)
-
-		x1 := round((x0 + (math.Cos(a) * r)))
-		y1 := round((y0 + (math.Sin(a) * r)))
-		x2 := round((x0 + (math.Cos(b) * r)))
-		y2 := round((y0 + (math.Sin(b) * r)))
-
-		c.DrawLine(x1, y1, x2, y2)
+func (c *Canvas) DrawPolygon(centerX, centerY, sides, radius int) {
+	xs, ys := PolygonVertices(centerX, centerY, sides, radius)
+	px := xs[sides-1]
+	py := ys[sides-1]
+	for i := 0; i < sides; i++ {
+		x := xs[i]
+		y := ys[i]
+		c.DrawLine(px, py, x, y)
+		px = x
+		py = y
 	}
+}
+
+/*
+PolygonVertices calculates the vertices of a polygon of N sides inside the circumscribed circle of radius R.
+*/
+func PolygonVertices(centerX, centerY, sides, radius int) ([]int, []int) {
+	degree := 360 / float64(sides)
+	x0 := float64(centerX)
+	y0 := float64(centerY)
+	r := float64(radius)
+	xs := make([]int, sides)
+	ys := make([]int, sides)
+	for i := 0; i < sides; i++ {
+		a := radians(float64(i) * degree)
+		xs = append(xs, round((x0 + (math.Cos(a) * r))))
+		ys = append(ys, round((y0 + (math.Sin(a) * r))))
+	}
+	return xs, ys
 }
 
 func radians(d float64) float64 {
